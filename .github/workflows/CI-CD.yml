@@ -25,7 +25,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t yourdockerhub/flask-app:latest .
+        docker build -t narah111/flask-app:latest .
 
     - name: Login to Docker Hub
       run: |
@@ -33,7 +33,7 @@ jobs:
         -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     - name: Push Docker image
-      run: docker push yourdockerhub/flask-app:latest
+      run: docker push narah111/flask-app:latest
 
     - name: Set up kubectl
       uses: azure/setup-kubectl@v4
