@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Hämta koden
+      # 1. Fetch code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Konfigurera AWS credentials från GitHub Secrets
+      # 2. configuration of aws credential from github
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -21,14 +21,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 3. Installera eksctl (om det inte finns på runner)
+      # 3. install eksctl (if it's available)
       - name: Install eksctl
         run: |
           curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
           sudo mv /tmp/eksctl /usr/local/bin
           eksctl version
 
-      # 4. Installera kubectl
+      # 4. Install kubectl
       - name: Set up kubectl
         uses: azure/setup-kubectl@v4
 
@@ -36,16 +36,16 @@ jobs:
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-app:latest .
 
-      # 6. Logga in på Docker Hub
+      # 6. Log in Docker Hub
       - name: Login to Docker Hub
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # 7. Push Docker-image
+      # 7. Push Docker image
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
 
-      # 8. Deploy till EKS
+      # 8. Deploy to EKS
       - name: Deploy to EKS
         run: |
           # Hämta kubeconfig för det befintliga klustret
